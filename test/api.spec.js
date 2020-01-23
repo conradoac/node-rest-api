@@ -302,5 +302,99 @@ describe('API', () => {
                 expect(res.body.data.user.updatedAt).to.be.a('string');
             });
         });
+
+        describe('GET', () => {
+
+            it('should respond with status code 400 (BadRequest) and error code "QueryLimitInvalid" if query limit is not number between 1 and 1000.', async () => {
+                let token = await getToken();
+                let res = await get(BASE_URL + '?limit=-1', token);
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QueryLimitInvalid);
+
+                res = await get(BASE_URL + '?limit=abc', token);
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QueryLimitInvalid);
+
+                // even if no token is provided
+                res = await get(BASE_URL + '?limit=abc');
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QueryLimitInvalid);
+
+                // max limit is 1000
+                res = await get(BASE_URL + '?limit=1001', token);
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QueryLimitInvalid);
+            });
+
+            it('should respond with status code 400 (BadRequest) and error code "QuerySkipInvalid" if query skip is not a positive integer.', async () => {
+                let token = await getToken();
+                let res = await get(BASE_URL + '?skip=-1', token);
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QuerySkipInvalid);
+
+                res = await get(BASE_URL + '?skip=abc', token);
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QuerySkipInvalid);
+
+                res = await get(BASE_URL + '?skip=abc');
+                expect(res.status).to.eq(StatusCode.BadRequest);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.QuerySkipInvalid);
+            });
+
+            it('should respond with status code 401 (Unauthorized) and error code "Unauthorized" if an auth token is not provided.', async () => {
+                let res = await get(BASE_URL);
+                expect(res.status).to.eq(StatusCode.Unauthorized);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.Unauthorized);
+            });
+
+            it('should respond with status code 401 (Unauthorized) and error code "Unauthorized" if an invalid auth token is provided.', async () => {
+                let res = await get(BASE_URL, 'some-invalid-token');
+
+                expect(res.status).to.eq(StatusCode.Unauthorized);
+                expect(res.body.error).to.be.an('object');
+                expect(res.body.error.code).to.eq(ServerError.Unauthorized);
+            });
+
+            it('should respond with status code 200 (Ok) and a list of users.', async () => {
+                let token = await getToken();
+                const res = await get(BASE_URL, token);
+
+                expect(res.status).to.eq(StatusCode.Ok);
+                expect(res.body.data).to.be.an('object');
+                expect(res.body.data.users).to.be.an('array');
+                expect(res.body.data.users).to.be.an('array').that.has.length(1);
+                expect(res.body.data.totalCount).to.eq(1);
+            });
+
+            it('should respond with status code 200 (Ok) and a list of users skipped by 1.', async () => {
+                let token = await getToken();
+                const res = await get(BASE_URL + '?skip=1', token);
+
+                expect(res.status).to.eq(StatusCode.Ok);
+                expect(res.body.data).to.be.an('object');
+                expect(res.body.data.users).to.be.an('array');
+                expect(res.body.data.users).to.be.an('array').that.has.length(0);
+                expect(res.body.data.totalCount).to.eq(1);
+            });
+
+            it('should respond with status code 200 (Ok) and a list of users limited by 1.', async () => {
+                let token = await getToken();
+                const res = await get(BASE_URL + '?limit=1', token);
+
+                expect(res.status).to.eq(StatusCode.Ok);
+                expect(res.body.data).to.be.an('object');
+                expect(res.body.data.users).to.be.an('array');
+                expect(res.body.data.users).to.be.an('array').that.has.length(1);
+                expect(res.body.data.totalCount).to.eq(1);
+            });
+        });
     });
 });
