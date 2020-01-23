@@ -1,4 +1,4 @@
-# Sobre
+# About
 
 In the last 5 years, I worked with web application development, most of them using Node.js and MongoDB.
 
@@ -63,7 +63,7 @@ For tests to run correctly, two things are necessary:
 }
 ```
 
-## To run the tests:
+## To run the tests
 
 ```cli
 npm test
