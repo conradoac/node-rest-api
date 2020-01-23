@@ -10,7 +10,7 @@ const { ServerError } = require('../src/error');
 const StatusCode = require('../src/status-code');
 
 dotEnv.config({
-    path: path.join(__dirname, '../env/test.env')
+    path: path.join(__dirname, './.env')
 });
 
 const API_URL = 'http://localhost:8080';
