@@ -20,19 +20,19 @@ Considero a quantidade de dependências relativamente baixa, e penso ser importa
 
 Naturalmente, é necessário ter instalado o Node.js e o MongoDB, de preferência em suas versões mais recentes.
 
-## Obter a última versão do servidor:
+## Obter a última versão do servidor
 
 ```cli
 git clone https://github.com/conradoac/node-rest-api.git
 ```
 
-## Instalar todas as dependências:
+## Instalar todas as dependências
 
 ```cli
 npm install
 ```
 
-## Executar
+# Execução
 
 Antes de executar, é necessário criar um arquivo de nome _.env_ no mesmo nível da pasta _src_. Este arquivo deve conter duas informações: `DB_URI` e `SECRET_KEY`.
 
@@ -41,7 +41,7 @@ DB_URI=mongodb://localhost:27017/mydb
 SECRET_KEY=SomeSecretKey
 ```
 
-Para executar o servidor:
+## Para executar o servidor
 
 ```cli
 npm start
@@ -61,8 +61,9 @@ Para que os testes sejam executados corretamente, duas coisas são necessárias:
     "password": "123456",
     "role": "Admin"
 }
+```
 
-Para executar os testes:
+## Para executar os testes
 
 ```cli
 npm test
