@@ -18,7 +18,7 @@ I consider the number of dependencies relatively low, and I think it is importan
 
 # Setup
 
-It is necessary to have Node.js and MongoDB installed, preferably in their most recent versions.
+It is necessary to have Node.js installed, preferably in its most recent versions.
 
 ## Get the latest version of the server
 
